@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  balancer:
+    build:
+      context: balancer_code
+      dockerfile: Dockerfile
+    ports:
+      - "2400:2400"
+  end_service:
+    build:
+      context: end_service_code
+      dockerfile: Dockerfile
+
+    

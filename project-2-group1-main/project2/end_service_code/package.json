@@ -1,0 +1,24 @@
+{
+  "name": "project-2-group1",
+  "version": "1.0.0",
+  "description": "# Due: Friday, October 29th 11:59 PM CST",
+  "main": "end_service.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node end_service.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cen4053-fall2021/project-2-group1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cen4053-fall2021/project-2-group1/issues"
+  },
+  "homepage": "https://github.com/cen4053-fall2021/project-2-group1#readme",
+  "dependencies": {
+    "axios": "^0.23.0",
+    "express": "^4.17.1"
+  }
+}
