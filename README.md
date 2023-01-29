@@ -1,0 +1,21 @@
+# SoftwareEngineeringDockerProject
+Objective
+The purpose of this project is to introduce the concept of creating a basic service behind a load balancer. In this project you will be creating multiple instances of the same service and sending requests to those instances through a load balancer that uses round robin load balancing.
+
+Problem Description
+You will be developing a load balancer and service using NodeJS. In order to fire up this service and to get your system running, you will be utilizing Docker with Docker Compose. This will require some basic networking with Docker Compose. Later on we will talk about a better way to do this using Docker Swarm.
+
+Project Details
+You are going to create a service, a load balancer, and a simulated client using NodeJS (material on Canvas). This service is only going to return the hostname of the os that the service is running on. We will do this project in stages. Each stage will generate a new file.
+
+The first stage is the simplest stage, create a service (we will call it end_service for our purposes) that will have a single route /gethostname (GET) that returns the hostname (this can be plaintext). To get the hostname you will use the os module in NodeJS. The os module has a function hostname that will get the hostname for you.
+
+The second stage is to create a service that will act as the entry point for the service (we will call this balancer for our purposes). A client will not directly call the end_service and instead will be calling this intermediate balancer service. It will also have a single route that is labeled /gethostname as well. The difference is that balancer will not get the hostname itself and will instead call the end_service to get the hostname from it. You will use axios to do this.
+
+Now, the third stage is to create Docker images for these two services. You will create two Dockerfiles, one for each service. Both will start with a base NodeJS image and then need to copy the code for each service into their respective images. You should then build the containers and run them (you will need to expose separate ports for each one when you do this). Make sure now that with them running in different containers that they can still communicate.
+
+The next stage is to introduce Docker compose. Using Docker compose, you should add both services to a single docker compose file. For the end_service, you will need to use the expose option and make sure that your end_service is exposed on a port such as "5000". For the balancer, you will need to use the ports option and directly map your balancer to a port on the machine. The difference between these two is that in the case of our end_service, the port that the container maps to on the host machine is not set, we do not know what port it is going to be listening to, so a client can't directly call it. In the case of the balancer, the port will be directly mapped to a port that we will know ahead of time. In order to use the end_service, we then need to go through our balancer. This works because Docker compose will setup a virtual network between the containers and our balancer will be able to communicate with the end_service by using routes like normal (e.g., "http://end_service:5000/gethostname"). Make sure that when doing this you add a depends_on option for the balancer. It will enforce that the end_service is started and setup before the balancer. An example of this can be seen here, please note that you aren't using nginx so your files will be simpler and there will not be a nginx configuration.
+
+You should now be able to build and start your containers. In order to see balancing in action, you should start your containers using the --scale option like so - "docker compose up --scale end_service=3" where 3 can be replaced with other numbers. This will start up multiple instances of end_service. When you make calls to the balancer, the balancer will communicate with Docker's hidden DNS registry that has built in round robin load balancing. So let's add one more step.
+
+Create a client that calls the balancer repeatedly and simply prints out the results. This does not need to be in a separate container or added to your Docker compose.
